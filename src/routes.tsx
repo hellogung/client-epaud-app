@@ -4,7 +4,7 @@ import App from "./App";
 import DashboardPage from "./pages/(panel)/dashboard/DashboardPage";
 import ProfilePage from "./pages/ProfilePage";
 import RegisterSchool from "./pages/(auth)/register/RegisterSchoolPage";
-import LoginSchool from "./pages/(auth)/login/LoginSchool";
+import LoginSchool from "./pages/(auth)/login/LoginSchoolPage";
 import LogoutPage from "./pages/(auth)/logout/LogoutPage";
 
 import DemoPanelPage from "./layouts/PanelLayout";
