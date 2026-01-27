@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useLogin } from "./useLogin";
 import { useForm } from "react-hook-form";
 import { loginValidator, type LoginValidatorType } from "./login.validator";
@@ -13,10 +13,7 @@ import { useState } from "react";
 
 const LoginFormComponent = () => {
   const { isPending, mutateAsync } = useLogin();
-
   const [isChecked, setIsChecked] = useState(false);
-
-  let navigate = useNavigate();
 
   const {
     register,
@@ -29,14 +26,6 @@ const LoginFormComponent = () => {
   const onSubmit = async (values: LoginValidatorType) => {
     try {
       await mutateAsync(values);
-
-      toast.success("Login berhasil", {
-        duration: 1000,
-      });
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      navigate("/panel", { replace: true });
     } catch (error) {
       toast.error(
         "Login gagal, silahkan masukkan username dan password dengan benar",
