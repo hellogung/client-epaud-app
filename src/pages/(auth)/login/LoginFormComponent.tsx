@@ -8,9 +8,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
 
 const LoginFormComponent = () => {
   const { isPending, mutateAsync } = useLogin();
+
+  const [isChecked, setIsChecked] = useState(false);
 
   let navigate = useNavigate();
 
@@ -79,16 +83,26 @@ const LoginFormComponent = () => {
             </div>
             <Input
               id="password"
-              type="text"
+              type={isChecked ? "text" : "password"}
               className="font-medium"
               placeholder="Password"
               {...register("password")}
             />
+
             {errors.password && (
               <span className="text-red-500 text-sm">
                 {errors.password.message}
               </span>
             )}
+          </Field>
+          <Field orientation="horizontal">
+            <Checkbox
+              checked={isChecked}
+              onCheckedChange={() => setIsChecked(!isChecked)}
+              id="toggle-password"
+              name="toggle-password"
+            />
+            <FieldLabel htmlFor="toggle-password">Lihat Password</FieldLabel>
           </Field>
           <Field>
             <Button type="submit" disabled={isPending}>
