@@ -2,7 +2,7 @@ import { useDocumentTitle } from "@/hooks/use-document-title"
 import { motion } from "motion/react"
 
 const DashboardPage = () => {
-  useDocumentTitle()
+  useDocumentTitle("Dashboard")
   return (
     <>
       {/* Tambahkan animation menggunakan motion */}

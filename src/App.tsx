@@ -1,8 +1,13 @@
 import { motion } from "motion/react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button } from "./components/ui/button";
+import { useEffect } from "react";
 
 function App() {
+  const navigate = useNavigate()
+  useEffect(() => {
+    navigate("/login")
+  }, [])
   return (
     <>
       <div className="p-10">
