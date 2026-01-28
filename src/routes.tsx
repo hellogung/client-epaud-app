@@ -11,6 +11,7 @@ import DemoPanelPage from "./layouts/PanelLayout";
 import PanelLayout from "./layouts/PanelLayout";
 import SekolahPage from "./pages/(panel)/(master-data)/sekolah/SekolahPage";
 import ForgotPasswordPage from "./pages/(auth)/forgot-password/ForgotPasswordPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -34,26 +35,31 @@ export const router = createBrowserRouter([
     element: <DemoPanelPage />,
   },
   {
-    path: "/panel",
-    element: <PanelLayout />,
+    element: <ProtectedRoute />,
     children: [
-      { index: true, Component: DashboardPage },
-      // {
-      //   path: "profile/:id",
-      //   loader: async ({ params }) => {
-      //     let id = params.id;
-      //     return { id };
-      //   },
-      //   Component: ProfilePage,
-      // },
       {
-        path: "/panel/data/sekolah",
-        element: <SekolahPage />,
-        children: [{ index: true, Component: SekolahPage }],
-      },
-      {
-        path: "profile",
-        Component: ProfilePage,
+        path: "/panel",
+        element: <PanelLayout />,
+        children: [
+          { index: true, Component: DashboardPage },
+          // {
+          //   path: "profile/:id",
+          //   loader: async ({ params }) => {
+          //     let id = params.id;
+          //     return { id };
+          //   },
+          //   Component: ProfilePage,
+          // },
+          {
+            path: "/panel/data/sekolah",
+            element: <SekolahPage />,
+            children: [{ index: true, Component: SekolahPage }],
+          },
+          {
+            path: "profile",
+            Component: ProfilePage,
+          },
+        ],
       },
     ],
   },
