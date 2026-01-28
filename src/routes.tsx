@@ -12,6 +12,7 @@ import PanelLayout from "./layouts/PanelLayout";
 import SekolahPage from "./pages/(panel)/(master-data)/sekolah/SekolahPage";
 import ForgotPasswordPage from "./pages/(auth)/forgot-password/ForgotPasswordPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -67,4 +68,9 @@ export const router = createBrowserRouter([
     path: "/logout",
     element: <LogoutPage />,
   },
+  // 404 Not Found
+  {
+    path: "*",
+    element: <NotFound />
+  }
 ]);

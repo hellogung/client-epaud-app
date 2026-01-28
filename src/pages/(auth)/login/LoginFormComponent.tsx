@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import { useLogin } from "./useLogin";
 import { useForm } from "react-hook-form";
 import { loginValidator, type LoginValidatorType } from "./login.validator";
@@ -10,10 +10,31 @@ import { Loader2 } from "lucide-react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { useAuthStore } from "./login.store";
+import { useAuthValidation } from "@/hooks/useAuth";
 
 const LoginFormComponent = () => {
   const { isPending, mutateAsync } = useLogin();
   const [isChecked, setIsChecked] = useState(false);
+  const { token } = useAuthStore();
+
+  const ProtectedLoginRegister = async () => {
+    if (!token) {
+      toast.error("Token tidak ditemukan");
+      return;
+    }
+
+    const { isSuccess, isLoading } = useAuthValidation(token);
+
+    if (isLoading) {
+      return <Loader2 className="w-4 h-4 animate-spin" />;
+    }
+
+    // ! FIX BUG KETIKA SUDAH AUTH, HARUSNYA AKSES /LOGIN TIDAK DIPERBOLEHKAN
+    if (isSuccess) {
+      return <Navigate to={"/panel"} replace />;
+    }
+  };
 
   const {
     register,
@@ -30,13 +51,15 @@ const LoginFormComponent = () => {
       toast.error(
         "Login gagal, silahkan masukkan username dan password dengan benar",
         {
-          duration: 3000,
+          duration: 1000,
         },
       );
 
       console.error(error);
     }
   };
+
+  ProtectedLoginRegister();
   return (
     <>
       <form
