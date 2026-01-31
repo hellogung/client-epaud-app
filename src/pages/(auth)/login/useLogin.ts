@@ -15,10 +15,8 @@ export const useLogin = () => {
         onSuccess: async (response) => {
             setAuth(response.data.access_token, response.data.user)
             toast.success("Login berhasil", {
-                duration: 1000,
+                duration: 2000,
             });
-
-            await new Promise((resolve) => setTimeout(resolve, 1000));
 
             navigate("/panel", { replace: true });
         }

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import { useLogin } from "./useLogin";
 import { useForm } from "react-hook-form";
 import { loginValidator, type LoginValidatorType } from "./login.validator";
@@ -9,11 +9,33 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "./login.store";
+import { useAuthValidation } from "@/hooks/useAuth";
 
 const LoginFormComponent = () => {
-  const { isPending, mutateAsync } = useLogin();
   const [isChecked, setIsChecked] = useState(false);
+
+  const { isPending, mutateAsync } = useLogin();
+  const { token } = useAuthStore();
+
+  const { isSuccess, isLoading, isError } = useAuthValidation(token);
+
+  useEffect(() => {
+    if (!token) return;
+
+    if (isError) {
+      toast.error("Token tidak ditemukan");
+    }
+  }, [token, isError]);
+
+  if (isLoading) {
+    return <Loader2 className="w-4 h-4 animate-spin" />;
+  }
+
+  if (isSuccess) {
+    return <Navigate to="/panel" replace />;
+  }
 
   const {
     register,
@@ -33,16 +55,12 @@ const LoginFormComponent = () => {
           duration: 3000,
         },
       );
-
-      console.error(error);
     }
   };
+
   return (
     <>
-      <form
-        className="flex min-w-md flex-col"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="" onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup>
           <Field>
             <FieldLabel htmlFor="username">Username</FieldLabel>
@@ -67,7 +85,7 @@ const LoginFormComponent = () => {
                 to="/forgot-password"
                 className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
               >
-                Forgot your password?
+                Lupa Password?
               </Link>
             </div>
             <Input

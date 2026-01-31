@@ -18,7 +18,7 @@ createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
         <div className="fixed bottom-5 right-5">
           <ModeToggle />
-          <Toaster closeButton richColors position="bottom-right" />
+          <Toaster closeButton richColors position="top-center" />
         </div>
       </QueryClientProvider>
     </ThemeProvider>

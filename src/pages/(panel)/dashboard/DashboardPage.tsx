@@ -1,8 +1,10 @@
 import { useDocumentTitle } from "@/hooks/use-document-title"
+import { useAuthStore } from "@/pages/(auth)/login/login.store"
 import { motion } from "motion/react"
 
 const DashboardPage = () => {
   useDocumentTitle("Dashboard")
+  console.log(useAuthStore.getState())
   return (
     <>
       {/* Tambahkan animation menggunakan motion */}
