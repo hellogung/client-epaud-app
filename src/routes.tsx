@@ -13,6 +13,7 @@ import SekolahPage from "./pages/(panel)/(master-data)/sekolah/SekolahPage";
 import ForgotPasswordPage from "./pages/(auth)/forgot-password/ForgotPasswordPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./NotFound";
+import VerificationAccountPage from "./pages/(auth)/verifikasi-akun/VerificationAccountPage";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginSchool />,
+  },
+  {
+    path: "/verify-account",
+    element: <VerificationAccountPage />,
   },
   {
     path: "forgot-password",

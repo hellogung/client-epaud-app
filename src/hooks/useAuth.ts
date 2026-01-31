@@ -2,7 +2,7 @@ import { verifyToken } from "@/api/auth.api"
 import { useQuery } from "@tanstack/react-query"
 import { useLocation } from "react-router"
 
-export const useAuthValidation = (token: string) => {
+export const useAuthValidation = (token: string | null) => {
     const location = useLocation()
     return useQuery({
         queryKey: ["verify-token", location.pathname],

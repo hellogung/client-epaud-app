@@ -9,32 +9,33 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "./login.store";
 import { useAuthValidation } from "@/hooks/useAuth";
 
 const LoginFormComponent = () => {
-  const { isPending, mutateAsync } = useLogin();
   const [isChecked, setIsChecked] = useState(false);
+
+  const { isPending, mutateAsync } = useLogin();
   const { token } = useAuthStore();
 
-  const ProtectedLoginRegister = async () => {
-    if (!token) {
+  const { isSuccess, isLoading, isError } = useAuthValidation(token);
+
+  useEffect(() => {
+    if (!token) return;
+
+    if (isError) {
       toast.error("Token tidak ditemukan");
-      return;
     }
+  }, [token, isError]);
 
-    const { isSuccess, isLoading } = useAuthValidation(token);
+  if (isLoading) {
+    return <Loader2 className="w-4 h-4 animate-spin" />;
+  }
 
-    if (isLoading) {
-      return <Loader2 className="w-4 h-4 animate-spin" />;
-    }
-
-    // ! FIX BUG KETIKA SUDAH AUTH, HARUSNYA AKSES /LOGIN TIDAK DIPERBOLEHKAN
-    if (isSuccess) {
-      return <Navigate to={"/panel"} replace />;
-    }
-  };
+  if (isSuccess) {
+    return <Navigate to="/panel" replace />;
+  }
 
   const {
     register,
@@ -51,21 +52,15 @@ const LoginFormComponent = () => {
       toast.error(
         "Login gagal, silahkan masukkan username dan password dengan benar",
         {
-          duration: 1000,
+          duration: 3000,
         },
       );
-
-      console.error(error);
     }
   };
 
-  ProtectedLoginRegister();
   return (
     <>
-      <form
-        className="flex min-w-md flex-col"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="" onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup>
           <Field>
             <FieldLabel htmlFor="username">Username</FieldLabel>
@@ -90,7 +85,7 @@ const LoginFormComponent = () => {
                 to="/forgot-password"
                 className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
               >
-                Forgot your password?
+                Lupa Password?
               </Link>
             </div>
             <Input
