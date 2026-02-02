@@ -14,6 +14,7 @@ import ForgotPasswordPage from "./pages/(auth)/forgot-password/ForgotPasswordPag
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./NotFound";
 import VerificationAccountPage from "./pages/(auth)/verifikasi-akun/VerificationAccountPage";
+import CompletionDataPage from "./pages/(auth)/completion-data/CompletionDataPage";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
   {
     path: "/verify-account",
     element: <VerificationAccountPage />,
+  },
+  {
+    path: "/completion-school-data",
+    element: <CompletionDataPage />,
   },
   {
     path: "forgot-password",
