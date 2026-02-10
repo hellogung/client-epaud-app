@@ -3,6 +3,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* EPAUD Custom Colors */
+@theme inline {
+  /* Cheerful & Friendly Color Palette */
+  --color-epaud-orange: #FF8A4C;
+  --color-epaud-pink: #FF6B9D;
+  --color-epaud-yellow: #FFD166;
+  --color-epaud-cyan: #4ECDC4;
+  --color-epaud-purple: #8B5CF6;
+  --color-epaud-green: #10B981;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

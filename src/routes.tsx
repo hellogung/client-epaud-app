@@ -14,10 +14,15 @@ import ForgotPasswordPage from "./pages/(auth)/forgot-password/ForgotPasswordPag
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./NotFound";
 import VerificationAccountPage from "./pages/(auth)/verifikasi-akun/VerificationAccountPage";
+import LandingPage from "./pages/landing/LandingPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
+    element: <LandingPage />,
+  },
+  {
+    path: "/old",
     element: <App />,
   },
   {
