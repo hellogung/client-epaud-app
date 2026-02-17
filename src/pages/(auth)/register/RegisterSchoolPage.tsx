@@ -1,6 +1,5 @@
 import { useDocumentTitle } from "@/hooks/use-document-title";
 import RegisterFormComponent from "./RegisterFormComponent";
-import LoginFormComponent from "../login/LoginFormComponent";
 
 const RegisterSchool = () => {
   useDocumentTitle("Register School");
