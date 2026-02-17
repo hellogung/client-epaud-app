@@ -1,29 +1,33 @@
 import { motion } from "motion/react";
 import { useInView } from "motion/react";
 import { useRef } from "react";
-import { Heart, Shield, Zap, Users, Sparkles, GraduationCap, type LucideIcon } from "lucide-react";
+import { Heart, Shield, Zap, Users, Sparkles, GraduationCap } from "lucide-react";
 
-type ColorKey = "pink" | "cyan" | "yellow" | "purple";
-
-const colorStyles: Record<ColorKey, { bg: string; text: string }> = {
-  pink: { bg: "bg-epaud-pink/10", text: "text-epaud-pink" },
-  cyan: { bg: "bg-epaud-cyan/10", text: "text-epaud-cyan" },
-  yellow: { bg: "bg-epaud-yellow/10", text: "text-epaud-yellow" },
-  purple: { bg: "bg-epaud-purple/10", text: "text-epaud-purple" },
-};
-
-interface Value {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  color: ColorKey;
-}
-
-const values: Value[] = [
-  { icon: Heart, title: "Penuh Kasih Sayang", description: "Dirancang untuk mendukung tumbuh kembang anak usia dini.", color: "pink" },
-  { icon: Shield, title: "Aman & Terpercaya", description: "Data sekolah terlindungi dengan keamanan enterprise.", color: "cyan" },
-  { icon: Zap, title: "Cepat & Efisien", description: "Hemat waktu administrasi hingga 80% dengan otomatisasi.", color: "yellow" },
-  { icon: Users, title: "Kolaboratif", description: "Hubungkan guru, orang tua, dan sekolah dalam satu platform.", color: "purple" },
+const values = [
+  {
+    icon: Heart,
+    title: "Penuh Kasih Sayang",
+    description: "Dirancang dengan penuh perhatian untuk mendukung tumbuh kembang anak usia dini.",
+    color: "epaud-pink",
+  },
+  {
+    icon: Shield,
+    title: "Aman & Terpercaya",
+    description: "Data sekolah dan siswa Anda terlindungi dengan keamanan tingkat enterprise.",
+    color: "epaud-cyan",
+  },
+  {
+    icon: Zap,
+    title: "Cepat & Efisien",
+    description: "Hemat waktu administrasi hingga 80% dengan otomatisasi cerdas.",
+    color: "epaud-yellow",
+  },
+  {
+    icon: Users,
+    title: "Kolaboratif",
+    description: "Hubungkan guru, orang tua, dan sekolah dalam satu platform terpadu.",
+    color: "epaud-purple",
+  },
 ];
 
 export default function AboutSection() {
@@ -32,12 +36,14 @@ export default function AboutSection() {
 
   return (
     <section id="about" className="py-20 lg:py-32 relative overflow-hidden">
+      {/* Background Decorations */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/2 left-0 w-72 h-72 bg-epaud-cyan/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-epaud-pink/10 rounded-full blur-3xl" />
       </div>
 
       <div className="container mx-auto px-4 lg:px-8" ref={ref}>
+        {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -59,7 +65,8 @@ export default function AboutSection() {
             <span className="bg-gradient-to-r from-epaud-cyan to-epaud-green bg-clip-text text-transparent">
               Ribuan Sekolah
             </span>
-            <span className="text-foreground"> Memilih EPAUD?</span>
+            <br />
+            <span className="text-foreground">Memilih EPAUD?</span>
           </motion.h2>
 
           <motion.p
@@ -68,35 +75,41 @@ export default function AboutSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg text-muted-foreground"
           >
-            Solusi lengkap manajemen sekolah PAUD yang dirancang khusus untuk kebutuhan pendidikan anak usia dini di Indonesia.
+            EPAUD adalah solusi lengkap manajemen sekolah PAUD yang dirancang khusus untuk 
+            kebutuhan pendidikan anak usia dini di Indonesia. Kami memahami tantangan unik 
+            yang dihadapi sekolah PAUD dan hadir untuk menyederhanakan semuanya.
           </motion.p>
         </div>
 
+        {/* Values Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-20">
-          {values.map((value, index) => {
-            const styles = colorStyles[value.color];
-            return (
-              <motion.div
-                key={value.title}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                whileHover={{ y: -8 }}
-                className="group"
-              >
-                <div className="bg-card border border-border rounded-2xl p-6 h-full hover:shadow-xl hover:shadow-epaud-orange/5 transition-all duration-300">
-                  <div className={`w-14 h-14 rounded-xl ${styles.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <value.icon className={`w-7 h-7 ${styles.text}`} />
-                  </div>
-                  <h3 className="text-lg font-bold text-foreground mb-2">{value.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{value.description}</p>
+          {values.map((value, index) => (
+            <motion.div
+              key={value.title}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+              whileHover={{ y: -8 }}
+              className="group"
+            >
+              <div className="bg-card border border-border rounded-2xl p-6 h-full hover:shadow-xl hover:shadow-epaud-orange/5 transition-all duration-300">
+                <div
+                  className={`w-14 h-14 rounded-xl bg-${value.color}/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                >
+                  <value.icon className={`w-7 h-7 text-${value.color}`} />
                 </div>
-              </motion.div>
-            );
-          })}
+                <h3 className="text-lg font-bold text-foreground mb-2">{value.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {value.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
+        {/* Story Section */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left - Image/Illustration */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -104,15 +117,21 @@ export default function AboutSection() {
             className="relative"
           >
             <div className="relative aspect-square max-w-md mx-auto">
+              {/* Main Circle */}
               <div className="absolute inset-8 bg-gradient-to-br from-epaud-orange/20 via-epaud-pink/20 to-epaud-purple/20 rounded-full" />
+              
+              {/* Inner Circle */}
               <div className="absolute inset-16 bg-gradient-to-br from-epaud-cyan/30 to-epaud-green/30 rounded-full flex items-center justify-center">
                 <div className="text-center">
                   <Sparkles className="w-16 h-16 text-epaud-orange mx-auto mb-4" />
-                  <span className="text-6xl font-black bg-gradient-to-r from-epaud-orange to-epaud-pink bg-clip-text text-transparent">5+</span>
+                  <span className="text-6xl font-black bg-gradient-to-r from-epaud-orange to-epaud-pink bg-clip-text text-transparent">
+                    5+
+                  </span>
                   <p className="text-muted-foreground font-medium mt-2">Tahun Pengalaman</p>
                 </div>
               </div>
 
+              {/* Floating Stats */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -133,6 +152,7 @@ export default function AboutSection() {
             </div>
           </motion.div>
 
+          {/* Right - Content */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -140,18 +160,32 @@ export default function AboutSection() {
           >
             <h3 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">
               Cerita Kami Dimulai dari{" "}
-              <span className="bg-gradient-to-r from-epaud-orange to-epaud-pink bg-clip-text text-transparent">Kepedulian</span>
+              <span className="bg-gradient-to-r from-epaud-orange to-epaud-pink bg-clip-text text-transparent">
+                Kepedulian
+              </span>
             </h3>
 
             <div className="space-y-4 text-muted-foreground">
               <p>
-                EPAUD lahir dari keinginan membantu ribuan sekolah PAUD di Indonesia mengelola operasional dengan lebih efisien.
+                EPAUD lahir dari keinginan untuk membantu ribuan sekolah PAUD di Indonesia 
+                mengelola operasional mereka dengan lebih efisien. Kami melihat betapa 
+                banyak waktu yang terbuang untuk pekerjaan administratif yang seharusnya 
+                bisa digunakan untuk mendidik anak-anak.
+              </p>
+              <p>
+                Tim kami terdiri dari para profesional pendidikan dan teknologi yang 
+                memahami kebutuhan unik sekolah PAUD. Setiap fitur yang kami bangun 
+                didasarkan pada feedback langsung dari guru dan kepala sekolah.
               </p>
               <p className="font-medium text-foreground">
-                Misi kami: <span className="text-epaud-orange">Membuat pengelolaan sekolah PAUD semudah dan semenyenangkan bermain.</span>
+                Misi kami sederhana:{" "}
+                <span className="text-epaud-orange">
+                  Membuat pengelolaan sekolah PAUD semudah dan semenyenangkan bermain.
+                </span>
               </p>
             </div>
 
+            {/* Key Points */}
             <div className="mt-8 grid grid-cols-2 gap-4">
               {[
                 { label: "Sekolah Terdaftar", value: "500+" },
