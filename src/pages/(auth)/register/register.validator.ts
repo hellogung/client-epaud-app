@@ -1,11 +1,16 @@
 import { z } from 'zod';
 
 export const registerSchoolValidator = z.object({
-    nama_sekolah: z.string().min(3, 'Nama Sekolah wajib diisi'),
-    nama_kepala_sekolah: z.string().min(3, 'Nama Kepala Sekolah wajib diisi'),
-    email: z.email("Format email tidak valid").optional(),
-    sms: z.string().min(10, "Nomor Telepon minimal 9 karakter").optional(),
-    password: z
+    nama_sekolah: z.string().min(1, "Nama sekolah wajib diisi"),
+    nama_kepala_sekolah: z.string().min(1, "Nama kepala sekolah wajib diisi"),
+    email: z.string().email("Format email tidak valid").optional().or(z.literal('')),
+    phone: z.string()
+        .min(10, "Nomor telepon minimal 10 digit")
+        .max(15, "Nomor telepon maksimal 15 digit")
+        .regex(/^[0-9]+$/, "Nomor telepon hanya boleh berisi angka")
+        .optional()
+        .or(z.literal('')),
+        password: z
         .string()
         .min(8, "Password minimal 12 karakter")
         .regex(/[a-z]/, "Password harus mengandung huruf kecil")
@@ -14,8 +19,15 @@ export const registerSchoolValidator = z.object({
         .regex(/[^A-Za-z0-9]/, "Password harus mengandung simbol")
         .refine((val) => !/\s/.test(val), {
             message: "Password tidak boleh mengandung spasi",
-        })
-});
+        }),
+}).refine(
+    (data) => {
+        const hasEmail = data.email && data.email.length > 0;
+        const hasPhone = data.phone && data.phone.length > 0;
+        return hasEmail || hasPhone;
+    },
+    { message: "Email atau nomor telepon wajib diisi", path: ["email"] }
+);
 
 export type RegisterSchoolValidatorType = z.infer<typeof registerSchoolValidator>;
 
@@ -41,4 +53,3 @@ export const passwordChecklistRules = {
         test: (val: string) => /[^A-Za-z0-9]/.test(val),
     },
 };
-

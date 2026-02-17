@@ -5,37 +5,19 @@ import { useLogin } from "./useLogin";
 import { useForm } from "react-hook-form";
 import { loginValidator, type LoginValidatorType } from "./login.validator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuthStore } from "./login.store";
 import { useAuthValidation } from "@/hooks/useAuth";
 
 const LoginFormComponent = () => {
-  const [isChecked, setIsChecked] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { isPending, mutateAsync } = useLogin();
-  const { token } = useAuthStore();
+  const token = useAuthStore((state) => state.token);
 
-  const { isSuccess, isLoading, isError } = useAuthValidation(token);
-
-  useEffect(() => {
-    if (!token) return;
-
-    if (isError) {
-      toast.error("Token tidak ditemukan");
-    }
-  }, [token, isError]);
-
-  if (isLoading) {
-    return <Loader2 className="w-4 h-4 animate-spin" />;
-  }
-
-  if (isSuccess) {
-    return <Navigate to="/panel" replace />;
-  }
+  const { isSuccess, isLoading } = useAuthValidation(token);
 
   const {
     register,
@@ -43,99 +25,116 @@ const LoginFormComponent = () => {
     formState: { errors },
   } = useForm<LoginValidatorType>({
     resolver: zodResolver(loginValidator),
+    defaultValues: {
+      identifier: "",
+      password: "",
+    },
   });
 
+  // Show loading while checking auth (only if token exists)
+  if (token && isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Redirect if already authenticated (must have token AND valid auth)
+  if (token && isSuccess) {
+    return <Navigate to="/panel" replace />;
+  }
+
   const onSubmit = async (values: LoginValidatorType) => {
-    try {
-      await mutateAsync(values);
-    } catch (error) {
-      toast.error(
-        "Login gagal, silahkan masukkan username dan password dengan benar",
-        {
-          duration: 3000,
-        },
-      );
-    }
+    await mutateAsync(values);
   };
 
   return (
-    <>
-      <form className="" onSubmit={handleSubmit(onSubmit)}>
-        <FieldGroup>
-          <Field>
-            <FieldLabel htmlFor="username">Username</FieldLabel>
-            <Input
-              id="username"
-              type="text"
-              className="font-medium"
-              placeholder="Username/Email/Handphone"
-              {...register("username")}
-            />
-            {errors.username && (
-              <span className="text-red-500 text-sm">
-                {errors.username.message}
-              </span>
-            )}
-          </Field>
-          <Field>
-            <div className="flex items-center">
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Link
-                tabIndex={-1}
-                to="/forgot-password"
-                className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-              >
-                Lupa Password?
-              </Link>
-            </div>
+    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="identifier">Username / Email / No. HP</FieldLabel>
+          <Input
+            id="identifier"
+            type="text"
+            className="font-medium"
+            placeholder="Masukkan username, email, atau no. HP"
+            autoComplete="username"
+            autoFocus
+            aria-invalid={!!errors.identifier}
+            aria-describedby={errors.identifier ? "identifier-error" : undefined}
+            {...register("identifier")}
+          />
+          {errors.identifier && (
+            <span id="identifier-error" className="text-red-500 text-sm" role="alert">
+              {errors.identifier.message}
+            </span>
+          )}
+        </Field>
+
+        <Field>
+          <div className="flex items-center justify-between">
+            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <Link
+              tabIndex={-1}
+              to="/forgot-password"
+              className="text-sm text-muted-foreground hover:text-primary hover:underline underline-offset-4 transition-colors"
+            >
+              Lupa Password?
+            </Link>
+          </div>
+          <div className="relative">
             <Input
               id="password"
-              type={isChecked ? "text" : "password"}
-              className="font-medium"
-              placeholder="Password"
+              type={showPassword ? "text" : "password"}
+              className="font-medium pr-10"
+              placeholder="Masukkan password"
+              autoComplete="current-password"
+              aria-invalid={!!errors.password}
+              aria-describedby={errors.password ? "password-error" : undefined}
               {...register("password")}
             />
-
-            {errors.password && (
-              <span className="text-red-500 text-sm">
-                {errors.password.message}
-              </span>
-            )}
-          </Field>
-          <Field orientation="horizontal">
-            <Checkbox
-              checked={isChecked}
-              onCheckedChange={() => setIsChecked(!isChecked)}
-              id="toggle-password"
-              name="toggle-password"
-            />
-            <FieldLabel htmlFor="toggle-password">Lihat Password</FieldLabel>
-          </Field>
-          <Field>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+            >
+              {showPassword ? (
+                <EyeOff className="w-4 h-4" />
               ) : (
-                "Login"
+                <Eye className="w-4 h-4" />
               )}
-            </Button>
+            </button>
+          </div>
+          {errors.password && (
+            <span id="password-error" className="text-red-500 text-sm" role="alert">
+              {errors.password.message}
+            </span>
+          )}
+        </Field>
 
-            {Object.keys(errors).length > 0 && (
-              <span className="text-red-500 text-sm text-center">
-                Mohon isi semua field yang dibutuhkan dengan benar!
-              </span>
+        <Field>
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Masuk...
+              </>
+            ) : (
+              "Masuk"
             )}
-          </Field>
+          </Button>
+        </Field>
 
-          <p className="text-center">
-            Belum punya akun ?{" "}
-            <Link to={"/register"} className="hover:underline">
-              Daftar Sekolah
-            </Link>
-          </p>
-        </FieldGroup>
-      </form>
-    </>
+        <p className="text-center text-sm text-muted-foreground">
+          Belum punya akun?{" "}
+          <Link to="/register" className="text-primary hover:underline font-medium">
+            Daftar Sekolah
+          </Link>
+        </p>
+      </FieldGroup>
+    </form>
   );
 };
 
